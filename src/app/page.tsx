@@ -538,31 +538,14 @@ export default function HeadhunterDashboard() {
             />
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent backdrop-blur-[2px]" />
 
-            <div className="relative z-10 p-6 sm:p-10 lg:p-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-3 backdrop-blur-md">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
-                <span>spray.ai Executive Engine</span>
-              </div>
-
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight drop-shadow-md">
+            <div className="relative z-10 p-8 sm:p-12 lg:p-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight drop-shadow-md">
                 Accelerate Your Executive Job Search
               </h1>
 
-              <p className="text-xs sm:text-sm text-slate-300 font-medium mt-2 leading-relaxed max-w-xl">
+              <p className="text-sm sm:text-base text-slate-300 font-medium mt-3 leading-relaxed max-w-xl">
                 Autonomous multi-source application tracking, real-time recruiter outreach mapping, and AI-tailored resume distribution.
               </p>
-
-              <div className="flex flex-wrap items-center gap-3 mt-5">
-                <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-white/10 border border-white/15 text-white backdrop-blur-md text-xs font-bold shadow-xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span>57 Active Applications</span>
-                </div>
-
-                <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-white/10 border border-white/15 text-white backdrop-blur-md text-xs font-bold shadow-xs">
-                  <span className="w-2 h-2 rounded-full bg-indigo-400" />
-                  <span>$175k+ Base Floor</span>
-                </div>
-              </div>
             </div>
           </div>
         )}
@@ -571,7 +554,7 @@ export default function HeadhunterDashboard() {
         <main className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full flex-1">
           {/* Top 3 KPI Cards (Only visible on Applications Tracker home page) */}
           {activeTab === 'tracker' && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-8">
               <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
                 <div>
                   <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Applications</p>
