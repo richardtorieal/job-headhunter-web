@@ -12,21 +12,15 @@ import {
   Building2, 
   DollarSign, 
   Zap, 
-  Mail, 
   Sparkles, 
   Plus, 
   X, 
   ChevronRight, 
-  Eye, 
-  User, 
-  ShieldCheck, 
-  Layers, 
-  Filter, 
-  Check, 
-  SlidersHorizontal,
-  ArrowUpRight,
   Inbox,
-  Clock
+  ArrowUpRight,
+  ArrowUpDown,
+  ChevronUp,
+  ChevronDown
 } from 'lucide-react';
 
 interface Job {
@@ -55,8 +49,11 @@ interface EmailItem {
   matchedJob?: Job;
 }
 
+type SortField = 'title' | 'company' | 'status' | 'salary' | 'appliedAt';
+type SortDirection = 'asc' | 'desc';
+
 export default function HeadhunterDashboard() {
-  const [activeTab, setActiveTab] = useState<'tracker' | 'feed' | 'outreach' | 'resumes' | 'settings'>('tracker');
+  const [activeTab, setActiveTab] = useState<'tracker' | 'outreach' | 'feed' | 'resumes' | 'settings'>('tracker');
   const [jobs, setJobs] = useState<Job[]>([]);
   const [emails, setEmails] = useState<EmailItem[]>([]);
   const [selectedEmail, setSelectedEmail] = useState<EmailItem | null>(null);
@@ -65,7 +62,11 @@ export default function HeadhunterDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  // Fully Editable Settings state
+  // Sorting State - Default: Applied Date Descending (Newest First)
+  const [sortField, setSortField] = useState<SortField>('appliedAt');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+
+  // Settings State
   const [settings, setSettings] = useState({
     salaryFloor: '$175,000',
     jobTitles: [
@@ -82,10 +83,7 @@ export default function HeadhunterDashboard() {
     fullName: 'Richard Anderson',
     highestDegree: "Master's degree (M.S. FIU)",
     remoteOnly: true,
-    hybridMaxDays: 3,
-    resumeTailoringEnabled: true,
-    blacklistedKeywords: ['junior', 'intern', 'entry level', 'unpaid', 'c++', 'java'],
-    preferredKeywords: ['AI', 'cloud', 'architecture', 'sales engineer', 'solutions architect']
+    resumeTailoringEnabled: true
   });
 
   const [resumes, setResumes] = useState<any[]>([]);
@@ -127,9 +125,7 @@ export default function HeadhunterDashboard() {
           email: data.defaultAnswers?.email || prev.email,
           phone: data.defaultAnswers?.phone || prev.phone,
           fullName: data.defaultAnswers?.fullName || prev.fullName,
-          highestDegree: data.defaultAnswers?.educationLevel || prev.highestDegree,
-          blacklistedKeywords: data.blacklistedKeywords || prev.blacklistedKeywords,
-          preferredKeywords: data.preferredKeywords || prev.preferredKeywords
+          highestDegree: data.defaultAnswers?.educationLevel || prev.highestDegree
         }));
       }
     } catch (e) {
@@ -167,6 +163,15 @@ export default function HeadhunterDashboard() {
     }
   };
 
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(prev => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      setSortDirection(field === 'appliedAt' ? 'desc' : 'asc');
+    }
+  };
+
   const handleSaveSettings = async () => {
     try {
       await fetch('/api/settings', {
@@ -176,8 +181,6 @@ export default function HeadhunterDashboard() {
           jobTitles: settings.jobTitles,
           salaryFloor: settings.salaryFloor,
           resumeTailoringEnabled: settings.resumeTailoringEnabled,
-          blacklistedKeywords: settings.blacklistedKeywords,
-          preferredKeywords: settings.preferredKeywords,
           defaultAnswers: {
             email: settings.email,
             phone: settings.phone,
@@ -225,38 +228,51 @@ export default function HeadhunterDashboard() {
     }
   };
 
-  const filteredJobs = jobs.filter(j => {
-    const matchesSearch = j.title.toLowerCase().includes(searchQuery.toLowerCase()) || j.company.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || j.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  // Filter and Sort Logic
+  const processedJobs = jobs
+    .filter(j => {
+      const matchesSearch = j.title.toLowerCase().includes(searchQuery.toLowerCase()) || j.company.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || j.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      let valA: any = a[sortField] || '';
+      let valB: any = b[sortField] || '';
+
+      if (sortField === 'appliedAt') {
+        valA = new Date(a.appliedAt).getTime();
+        valB = new Date(b.appliedAt).getTime();
+      } else if (sortField === 'title' || sortField === 'company' || sortField === 'status') {
+        valA = String(valA).toLowerCase();
+        valB = String(valB).toLowerCase();
+      }
+
+      if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+      if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
 
   const interviewCount = jobs.filter(j => j.status === 'interview_scheduled' || j.status === 'confirmed').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50/50 to-indigo-50/20 text-slate-800 font-sans antialiased">
-      {/* Header Bar - Dribbble sise.ai Aesthetic */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/80 shadow-xs">
-        <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-emerald-400 flex items-center justify-center shadow-md shadow-indigo-500/15">
-              <Sparkles className="w-5 h-5 text-white" />
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
+      {/* Clean Header */}
+      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+              <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg font-extrabold text-slate-900 tracking-tight">
-                  sise.ai
-                </h1>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                  Headhunter Pro
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-medium">Automated Job Application & Recruiter Intelligence</p>
+              <h1 className="text-base font-bold text-slate-900 leading-none">
+                Headhunter AI
+              </h1>
+              <p className="text-[11px] text-slate-500 font-medium mt-1">Executive Career Automation & Application Tracker</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50/80 text-emerald-700 text-xs font-semibold border border-emerald-200/60 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               IMAP Active: {settings.email}
             </div>
@@ -264,7 +280,7 @@ export default function HeadhunterDashboard() {
             <button 
               onClick={handleScanEmails}
               disabled={scanning}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 active:from-indigo-800 text-white text-xs font-bold rounded-xl transition shadow-sm shadow-indigo-500/20 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition shadow-xs disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${scanning ? 'animate-spin' : ''}`} />
               {scanning ? 'Syncing...' : 'Sync Inbox'}
@@ -275,94 +291,92 @@ export default function HeadhunterDashboard() {
 
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {/* KPI Summary Cards - Dribbble sise.ai Style */}
+        {/* KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          <div className="bg-white/90 backdrop-blur-md p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all flex items-center justify-between group">
+          <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div>
               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Applications</p>
-              <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">{jobs.length}</h3>
-              <p className="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1">
-                <ArrowUpRight className="w-3.5 h-3.5" /> Direct & Easy Apply
-              </p>
+              <h3 className="text-2xl font-extrabold text-slate-900 mt-1">{jobs.length}</h3>
+              <p className="text-xs text-emerald-600 font-semibold mt-1">Direct & Easy Apply</p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50/80 text-indigo-600 flex items-center justify-center border border-indigo-100 group-hover:scale-105 transition-transform">
-              <Briefcase className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <Briefcase className="w-5 h-5" />
             </div>
           </div>
 
           <div 
             onClick={() => setActiveTab('outreach')}
-            className="bg-white/90 backdrop-blur-md p-5 rounded-2xl border border-emerald-200/80 shadow-xs hover:shadow-md transition-all flex items-center justify-between cursor-pointer group"
+            className="bg-white p-5 rounded-2xl border border-emerald-200/80 shadow-xs flex items-center justify-between cursor-pointer hover:border-emerald-300 transition"
           >
             <div>
               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Interview Outreach</p>
-              <h3 className="text-2xl font-black text-emerald-600 mt-1 tracking-tight">{interviewCount}</h3>
-              <p className="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1 group-hover:text-emerald-700">
-                Click to view email responses <ChevronRight className="w-3.5 h-3.5" />
+              <h3 className="text-2xl font-extrabold text-emerald-600 mt-1">{interviewCount}</h3>
+              <p className="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1">
+                View email responses <ChevronRight className="w-3.5 h-3.5" />
               </p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 group-hover:scale-105 transition-transform">
-              <Inbox className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <Inbox className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="bg-white/90 backdrop-blur-md p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all flex items-center justify-between group">
+          <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div>
               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Salary Floor</p>
-              <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">{settings.salaryFloor}</h3>
-              <p className="text-xs text-indigo-600 font-semibold mt-1">Strict floor filter enforced</p>
+              <h3 className="text-2xl font-extrabold text-slate-900 mt-1">{settings.salaryFloor}</h3>
+              <p className="text-xs text-indigo-600 font-medium mt-1">Strict floor filter enforced</p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-100 group-hover:scale-105 transition-transform">
-              <DollarSign className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <DollarSign className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="bg-white/90 backdrop-blur-md p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all flex items-center justify-between group">
+          <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div>
               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Resume Variant Engine</p>
-              <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">
+              <h3 className="text-2xl font-extrabold text-slate-900 mt-1">
                 {settings.resumeTailoringEnabled ? 'Active' : 'Disabled'}
               </h3>
-              <p className="text-xs text-slate-500 font-semibold mt-1">Auto-tailors per role category</p>
+              <p className="text-xs text-slate-500 font-medium mt-1">Auto-tailors per role category</p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100 group-hover:scale-105 transition-transform">
-              <Zap className="w-6 h-6" />
+            <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+              <Zap className="w-5 h-5" />
             </div>
           </div>
         </div>
 
-        {/* Navigation Tabs - Dribbble Pill Style */}
-        <div className="flex bg-white/80 p-1.5 rounded-2xl border border-slate-200/80 shadow-xs mb-8 overflow-x-auto gap-2">
+        {/* Tab Switcher */}
+        <div className="flex border-b border-slate-200 mb-8 space-x-8">
           <button 
             onClick={() => setActiveTab('tracker')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
+            className={`pb-4 text-xs font-bold flex items-center gap-2 border-b-2 transition ${
               activeTab === 'tracker' 
-                ? 'bg-slate-900 text-white shadow-sm' 
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                ? 'border-indigo-600 text-indigo-600' 
+                : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
             <Briefcase className="w-4 h-4" />
-            Tracker ({jobs.length})
+            Job Applications Tracker ({jobs.length})
           </button>
 
           <button 
             onClick={() => setActiveTab('outreach')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
+            className={`pb-4 text-xs font-bold flex items-center gap-2 border-b-2 transition ${
               activeTab === 'outreach' 
-                ? 'bg-slate-900 text-white shadow-sm' 
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                ? 'border-indigo-600 text-indigo-600' 
+                : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <Inbox className="w-4 h-4 text-emerald-500" />
+            <Inbox className="w-4 h-4 text-emerald-600" />
             Recruiter Email Outreach ({emails.length})
           </button>
 
           <button 
             onClick={() => setActiveTab('feed')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
+            className={`pb-4 text-xs font-bold flex items-center gap-2 border-b-2 transition ${
               activeTab === 'feed' 
-                ? 'bg-slate-900 text-white shadow-sm' 
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                ? 'border-indigo-600 text-indigo-600' 
+                : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
             <Search className="w-4 h-4 text-indigo-500" />
@@ -371,10 +385,10 @@ export default function HeadhunterDashboard() {
 
           <button 
             onClick={() => setActiveTab('resumes')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
+            className={`pb-4 text-xs font-bold flex items-center gap-2 border-b-2 transition ${
               activeTab === 'resumes' 
-                ? 'bg-slate-900 text-white shadow-sm' 
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                ? 'border-indigo-600 text-indigo-600' 
+                : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
             <FileText className="w-4 h-4 text-purple-500" />
@@ -383,21 +397,21 @@ export default function HeadhunterDashboard() {
 
           <button 
             onClick={() => setActiveTab('settings')}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
+            className={`pb-4 text-xs font-bold flex items-center gap-2 border-b-2 transition ${
               activeTab === 'settings' 
-                ? 'bg-slate-900 text-white shadow-sm' 
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                ? 'border-indigo-600 text-indigo-600' 
+                : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
             <Settings className="w-4 h-4 text-slate-500" />
-            Settings & Criteria
+            Settings & Preferences
           </button>
         </div>
 
-        {/* TAB 1: TRACKER */}
+        {/* TAB 1: SORTABLE TRACKER TABLE */}
         {activeTab === 'tracker' && (
           <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-white/90 p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
               <div className="relative w-full sm:w-80">
                 <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
                 <input 
@@ -405,7 +419,7 @@ export default function HeadhunterDashboard() {
                   placeholder="Search role or company..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-medium"
+                  className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 font-medium"
                 />
               </div>
 
@@ -423,7 +437,7 @@ export default function HeadhunterDashboard() {
 
                 <button 
                   onClick={() => setShowAddJobModal(true)}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition shadow-sm"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition shadow-xs"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Add Tracked Job
@@ -431,27 +445,79 @@ export default function HeadhunterDashboard() {
               </div>
             </div>
 
-            {/* Jobs Table */}
-            <div className="bg-white/90 backdrop-blur-md rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+            {/* Interactive Sortable Jobs Table */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
               {loading ? (
-                <div className="p-12 text-center text-slate-500 font-medium">Loading tracked applications...</div>
-              ) : filteredJobs.length === 0 ? (
-                <div className="p-12 text-center text-slate-500 font-medium">No applications match your search.</div>
+                <div className="p-12 text-center text-slate-500 text-xs font-medium">Loading tracked applications...</div>
+              ) : processedJobs.length === 0 ? (
+                <div className="p-12 text-center text-slate-500 text-xs font-medium">No applications match your search.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                        <th className="px-6 py-4">Role & Company</th>
-                        <th className="px-6 py-4">Status</th>
-                        <th className="px-6 py-4">Salary / Location</th>
-                        <th className="px-6 py-4">Applied Date</th>
+                      <tr className="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none">
+                        <th 
+                          onClick={() => handleSort('title')}
+                          className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            Role & Company
+                            {sortField === 'title' ? (
+                              sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-indigo-600" /> : <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
+                            ) : (
+                              <ArrowUpDown className="w-3 h-3 text-slate-300" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th 
+                          onClick={() => handleSort('status')}
+                          className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            Status
+                            {sortField === 'status' ? (
+                              sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-indigo-600" /> : <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
+                            ) : (
+                              <ArrowUpDown className="w-3 h-3 text-slate-300" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th 
+                          onClick={() => handleSort('salary')}
+                          className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            Salary / Location
+                            {sortField === 'salary' ? (
+                              sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-indigo-600" /> : <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
+                            ) : (
+                              <ArrowUpDown className="w-3 h-3 text-slate-300" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th 
+                          onClick={() => handleSort('appliedAt')}
+                          className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition bg-indigo-50/40 text-indigo-900"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            Applied Date (Default: Descending)
+                            {sortField === 'appliedAt' ? (
+                              sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-indigo-600" /> : <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
+                            ) : (
+                              <ArrowUpDown className="w-3 h-3 text-slate-300" />
+                            )}
+                          </div>
+                        </th>
+
                         <th className="px-6 py-4 text-right">Action</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-xs">
-                      {filteredJobs.map((job, idx) => (
-                        <tr key={idx} className="hover:bg-slate-50/70 transition">
+                      {processedJobs.map((job, idx) => (
+                        <tr key={idx} className="hover:bg-slate-50/60 transition">
                           <td className="px-6 py-4">
                             <div className="font-bold text-slate-900 text-sm">{job.title}</div>
                             <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
@@ -464,7 +530,7 @@ export default function HeadhunterDashboard() {
                           <td className="px-6 py-4">
                             {job.status === 'interview_scheduled' || job.status === 'confirmed' ? (
                               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                 Interview / Confirmed
                               </span>
                             ) : job.status === 'rejected' ? (
@@ -472,7 +538,7 @@ export default function HeadhunterDashboard() {
                                 Declined
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
                                 Applied
                               </span>
                             )}
@@ -481,7 +547,7 @@ export default function HeadhunterDashboard() {
                             <div className="font-bold text-slate-900">{job.salary || '$180,000+'}</div>
                             <div className="text-slate-400 mt-0.5">{job.location || 'Remote, US'}</div>
                           </td>
-                          <td className="px-6 py-4 text-xs text-slate-500 font-medium">
+                          <td className="px-6 py-4 text-xs text-slate-700 font-bold bg-slate-50/40">
                             {new Date(job.appliedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                           </td>
                           <td className="px-6 py-4 text-right">
@@ -490,7 +556,7 @@ export default function HeadhunterDashboard() {
                                 href={job.url} 
                                 target="_blank" 
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-3 py-1.5 rounded-xl border border-indigo-100 transition"
+                                className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800"
                               >
                                 View Job <ExternalLink className="w-3.5 h-3.5" />
                               </a>
@@ -506,23 +572,22 @@ export default function HeadhunterDashboard() {
           </div>
         )}
 
-        {/* TAB 2: RECRUITER EMAIL OUTREACH & FULL MESSAGES (User Request #1) */}
+        {/* TAB 2: RECRUITER EMAIL OUTREACH */}
         {activeTab === 'outreach' && (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 rounded-2xl shadow-sm flex items-center justify-between">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
               <div>
-                <div className="flex items-center gap-2">
-                  <Inbox className="w-5 h-5 text-emerald-400" />
-                  <h2 className="text-base font-bold">Recruiter Outreach & Full Email Content Viewer</h2>
-                </div>
-                <p className="text-xs text-slate-300 mt-1">
-                  Full text of incoming emails from recruiters, hiring managers, and applicant tracking systems mapped to your applications.
+                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <Inbox className="w-5 h-5 text-emerald-600" /> Recruiter Email Outreach & Full Content
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Full content of incoming emails from recruiters and applicant tracking systems mapped to your applications.
                 </p>
               </div>
 
               <button 
                 onClick={handleScanEmails}
-                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition flex items-center gap-2 shadow-xs"
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${scanning ? 'animate-spin' : ''}`} />
                 {scanning ? 'Scanning...' : 'Check Inbox'}
@@ -530,15 +595,14 @@ export default function HeadhunterDashboard() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Email List Column */}
               <div className="lg:col-span-1 space-y-3">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider px-1">
-                  Incoming Responses ({emails.length})
-                </h3>
+                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider px-1">
+                  Incoming Emails ({emails.length})
+                </h4>
 
                 {emails.length === 0 ? (
                   <div className="bg-white p-6 rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
-                    No recruiter emails logged yet. Click "Check Inbox" to sync.
+                    No recruiter emails logged yet.
                   </div>
                 ) : (
                   emails.map((emailItem) => (
@@ -547,8 +611,8 @@ export default function HeadhunterDashboard() {
                       onClick={() => setSelectedEmail(emailItem)}
                       className={`p-4 rounded-2xl border cursor-pointer transition ${
                         selectedEmail?.id === emailItem.id 
-                          ? 'bg-indigo-50/80 border-indigo-300 shadow-sm' 
-                          : 'bg-white/90 border-slate-200/80 hover:border-indigo-200 shadow-xs'
+                          ? 'bg-indigo-50/80 border-indigo-300 shadow-xs' 
+                          : 'bg-white border-slate-200/80 hover:border-indigo-200'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1.5">
@@ -558,9 +622,9 @@ export default function HeadhunterDashboard() {
                         <span className="text-[10px] text-slate-400 font-medium">{emailItem.date.slice(0, 16)}</span>
                       </div>
 
-                      <h4 className="text-xs font-bold text-slate-900 truncate">{emailItem.subject}</h4>
+                      <h5 className="text-xs font-bold text-slate-900 truncate">{emailItem.subject}</h5>
                       <p className="text-[11px] text-indigo-600 font-medium mt-0.5">{emailItem.company || emailItem.from}</p>
-                      <p className="text-[11px] text-slate-500 line-clamp-2 mt-1.5 font-sans leading-relaxed">
+                      <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 font-sans">
                         {emailItem.fullBody.replace(/<[^>]*>?/gm, '')}
                       </p>
                     </div>
@@ -568,10 +632,10 @@ export default function HeadhunterDashboard() {
                 )}
               </div>
 
-              {/* Full Email Body Content Viewer */}
+              {/* Full Email Body Content */}
               <div className="lg:col-span-2">
                 {selectedEmail ? (
-                  <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+                  <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
                     <div className="border-b border-slate-100 pb-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -596,12 +660,12 @@ export default function HeadhunterDashboard() {
                       )}
                     </div>
 
-                    <div className="prose prose-slate max-w-none text-xs text-slate-700 leading-relaxed font-mono bg-slate-50 p-4 rounded-xl border border-slate-200/60 whitespace-pre-wrap">
+                    <div className="prose prose-slate max-w-none text-xs text-slate-700 leading-relaxed font-sans bg-slate-50 p-4 rounded-xl border border-slate-200/60 whitespace-pre-wrap">
                       {selectedEmail.fullBody.replace(/<[^>]*>?/gm, '')}
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-white p-12 rounded-2xl border border-slate-200/80 shadow-xs text-center text-xs text-slate-400">
+                  <div className="bg-white p-12 rounded-2xl border border-slate-200/80 shadow-xs text-center text-xs text-slate-400 font-medium">
                     Select an email from the left list to read its complete full body message.
                   </div>
                 )}
@@ -613,12 +677,12 @@ export default function HeadhunterDashboard() {
         {/* TAB 3: HEADHUNTER FEED */}
         {activeTab === 'feed' && (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-sm">
-              <div className="flex items-center gap-3">
-                <Sparkles className="w-5 h-5 text-indigo-400" />
-                <h2 className="text-base font-bold">Multi-Source Headhunter Real-Time Feed</h2>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-indigo-600" />
+                <h3 className="text-base font-bold text-slate-900">Multi-Source Headhunter Real-Time Feed</h3>
               </div>
-              <p className="text-xs text-indigo-200 mt-1 max-w-2xl">
+              <p className="text-xs text-slate-500 mt-1">
                 Non-LinkedIn & LinkedIn direct career portals (Greenhouse, Lever, Workday) matching your specifications ($175k+, remote/hybrid).
               </p>
             </div>
@@ -630,7 +694,7 @@ export default function HeadhunterDashboard() {
                     <span className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
                       Greenhouse Direct
                     </span>
-                    <h3 className="text-base font-bold text-slate-900 mt-2">Senior Sales Engineer - Token Factory</h3>
+                    <h4 className="text-base font-bold text-slate-900 mt-2">Senior Sales Engineer - Token Factory</h4>
                     <p className="text-xs text-slate-500 font-semibold">Nebius • Remote, United States</p>
                   </div>
                   <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
@@ -651,10 +715,10 @@ export default function HeadhunterDashboard() {
               <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <span className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-sky-50 text-sky-700 border border-sky-100">
+                    <span className="px-2.5 py-1 rounded-md text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-100">
                       Lever Direct
                     </span>
-                    <h3 className="text-base font-bold text-slate-900 mt-2">Senior AI Solutions Architect</h3>
+                    <h4 className="text-base font-bold text-slate-900 mt-2">Senior AI Solutions Architect</h4>
                     <p className="text-xs text-slate-500 font-semibold">Scale AI • Remote / Hybrid US</p>
                   </div>
                   <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
@@ -666,7 +730,7 @@ export default function HeadhunterDashboard() {
                 </p>
                 <div className="flex items-center justify-between pt-3 border-t border-slate-100">
                   <span className="text-xs font-bold text-slate-800">$190k - $240k USD</span>
-                  <button className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs">
+                  <button className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition shadow-xs">
                     1-Click Apply
                   </button>
                 </div>
@@ -703,7 +767,7 @@ export default function HeadhunterDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {resumes.map((r, idx) => (
                 <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
-                  <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
@@ -722,13 +786,13 @@ export default function HeadhunterDashboard() {
           </div>
         )}
 
-        {/* TAB 5: FULLY EDITABLE SETTINGS (User Request #2) */}
+        {/* TAB 5: EDITABLE SETTINGS */}
         {activeTab === 'settings' && (
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs max-w-4xl space-y-6">
             <div>
-              <h3 className="text-lg font-bold text-slate-900">Job Preferences & Account Criteria (Fully Editable)</h3>
+              <h3 className="text-base font-bold text-slate-900">Job Preferences & Account Criteria (Fully Editable)</h3>
               <p className="text-xs text-slate-500 mt-1">
-                Edit your target job titles, salary floor, remote/hybrid rules, and applicant details directly. Changes persist to your automation config.
+                Edit your target job titles, salary floor, remote/hybrid rules, and applicant details directly.
               </p>
             </div>
 
@@ -750,7 +814,7 @@ export default function HeadhunterDashboard() {
                 <div className="flex gap-2">
                   <input 
                     type="text" 
-                    placeholder="Add new job title (e.g. Technical Product Manager)..."
+                    placeholder="Add new job title..."
                     value={settings.newTitleInput}
                     onChange={(e) => setSettings(prev => ({ ...prev, newTitleInput: e.target.value }))}
                     className="flex-1 text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 font-medium"
@@ -822,7 +886,7 @@ export default function HeadhunterDashboard() {
             <div className="pt-4 border-t border-slate-100 flex justify-end">
               <button 
                 onClick={handleSaveSettings}
-                className="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white text-xs font-bold rounded-xl transition shadow-sm"
+                className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition shadow-xs"
               >
                 Save All Settings & Preferences
               </button>
