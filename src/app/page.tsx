@@ -306,13 +306,13 @@ export default function HeadhunterDashboard() {
           {/* Sidebar Header */}
           <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800">
             <div className="flex items-center gap-3 overflow-hidden">
-              <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shrink-0">
-                <Briefcase className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shrink-0 font-black text-xs tracking-tighter">
+                sp.ai
               </div>
               {!sidebarCollapsed && (
                 <div className="truncate">
-                  <h1 className="text-sm font-bold text-white leading-tight">Executive Portal</h1>
-                  <p className="text-[10px] text-slate-400 font-medium truncate">Career Tracker</p>
+                  <h1 className="text-base font-black text-white leading-tight tracking-tight">spray.ai</h1>
+                  <p className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider truncate">Executive Pipeline</p>
                 </div>
               )}
             </div>
