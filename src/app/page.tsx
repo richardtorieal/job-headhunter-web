@@ -317,15 +317,6 @@ export default function HeadhunterDashboard() {
               )}
             </div>
 
-            {/* Desktop Collapse Toggle */}
-            <button 
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden md:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
-              title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-            >
-              {sidebarCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
-            </button>
-
             {/* Mobile Close Button */}
             <button 
               onClick={() => setMobileMenuOpen(false)}
@@ -399,16 +390,34 @@ export default function HeadhunterDashboard() {
           </nav>
         </div>
 
-        {/* Sidebar Footer User Info */}
-        {!sidebarCollapsed && (
-          <div className="p-4 border-t border-slate-800 text-xs">
-            <div className="flex items-center gap-2 text-slate-300 font-semibold truncate">
-              <UserCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span className="truncate">{settings.fullName}</span>
+        {/* Sidebar Footer User Info & Bottom Collapse Toggle */}
+        <div className="p-3 border-t border-slate-800 space-y-2">
+          {!sidebarCollapsed && (
+            <div className="px-2 py-1 text-xs">
+              <div className="flex items-center gap-2 text-slate-300 font-semibold truncate">
+                <UserCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span className="truncate">{settings.fullName}</span>
+              </div>
+              <p className="text-[10px] text-slate-500 truncate mt-0.5">{settings.email}</p>
             </div>
-            <p className="text-[10px] text-slate-500 truncate mt-0.5">{settings.email}</p>
-          </div>
-        )}
+          )}
+
+          {/* Desktop Collapse Toggle Button at Bottom */}
+          <button 
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="hidden md:flex items-center justify-center gap-2.5 w-full p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition text-xs font-semibold min-h-[40px]"
+            title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+          >
+            {sidebarCollapsed ? (
+              <PanelLeftOpen className="w-5 h-5" />
+            ) : (
+              <>
+                <PanelLeftClose className="w-5 h-5" />
+                <span>Collapse Sidebar</span>
+              </>
+            )}
+          </button>
+        </div>
       </aside>
 
       {/* Right Main Content Area */}
@@ -818,11 +827,31 @@ export default function HeadhunterDashboard() {
                       </div>
                       <iframe 
                         title="Full Email Message Content"
-                        srcDoc={
-                          selectedEmail.fullBody.includes('<html') || selectedEmail.fullBody.includes('<div') || selectedEmail.fullBody.includes('<p') 
-                            ? selectedEmail.fullBody 
-                            : `<!DOCTYPE html><html><head><style>body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; color: #334155; line-height: 1.6; padding: 20px; white-space: pre-wrap; }</style></head><body>${selectedEmail.fullBody}</body></html>`
-                        }
+                        srcDoc={`
+                          <!DOCTYPE html>
+                          <html>
+                            <head>
+                              <meta charset="utf-8">
+                              <style>
+                                body, p, div, td, span, li, a, h1, h2, h3, h4 {
+                                  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+                                  color: #1e293b !important;
+                                  line-height: 1.6 !important;
+                                }
+                                body {
+                                  padding: 20px;
+                                  margin: 0;
+                                  font-size: 13px;
+                                  background-color: #ffffff;
+                                }
+                                a { color: #4f46e5 !important; }
+                              </style>
+                            </head>
+                            <body>
+                              ${selectedEmail.fullBody}
+                            </body>
+                          </html>
+                        `}
                         className="w-full h-[550px] border-0 bg-white"
                       />
                     </div>
