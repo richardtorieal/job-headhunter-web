@@ -298,7 +298,7 @@ export default function HeadhunterDashboard() {
 
       {/* Left Collapsible Sidebar */}
       <aside className={`
-        fixed md:sticky top-0 z-50 h-screen bg-slate-900 text-slate-300 border-r border-slate-800 transition-all duration-300 flex flex-col
+        fixed top-0 left-0 bottom-0 z-50 h-full bg-slate-900 text-slate-300 border-r border-slate-800 transition-all duration-300 flex flex-col justify-between
         ${mobileMenuOpen ? 'translate-x-0 w-64' : '-translate-x-full md:translate-x-0'}
         ${sidebarCollapsed ? 'md:w-20' : 'md:w-64'}
       `}>
@@ -389,9 +389,9 @@ export default function HeadhunterDashboard() {
         </nav>
 
         {/* Sidebar Footer User Info & Bottom Collapse Toggle (Pinned Bottom) */}
-        <div className="p-3 border-t border-slate-800 space-y-2 shrink-0 bg-slate-900 z-10">
+        <div className="p-3 border-t border-slate-800 shrink-0 bg-slate-900">
           {!sidebarCollapsed && (
-            <div className="px-2 py-1 text-xs">
+            <div className="px-2 py-1 mb-2 text-xs">
               <div className="flex items-center gap-2 text-slate-300 font-semibold truncate">
                 <UserCheck className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span className="truncate">{settings.fullName}</span>
@@ -415,8 +415,8 @@ export default function HeadhunterDashboard() {
         </div>
       </aside>
 
-      {/* Right Main Content Area */}
-      <div className="flex-1 min-w-0 flex flex-col">
+      {/* Right Main Content Area with Dynamic Padding Offset */}
+      <div className={`flex-1 min-w-0 flex flex-col transition-all duration-300 ${sidebarCollapsed ? 'md:pl-20' : 'md:pl-64'}`}>
         {/* Header Bar */}
         <header className="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-xs h-16 px-4 md:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
