@@ -23,7 +23,8 @@ import {
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
-  ChevronLeft
+  ChevronLeft,
+  Sparkles
 } from 'lucide-react';
 
 interface Job {
@@ -574,7 +575,46 @@ export default function HeadhunterDashboard() {
         </header>
 
         {/* Content Body */}
-        <main className="p-4 md:p-8 space-y-6 max-w-7xl w-full mx-auto">
+        <main className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full flex-1">
+          {/* Hero Section */}
+          <div className="relative mb-8 rounded-3xl overflow-hidden shadow-2xl border border-slate-800/80 bg-slate-950">
+            {/* Background Image Container with Overlay */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center opacity-85 transition-transform duration-700 hover:scale-105"
+              style={{ backgroundImage: "url('/hero-bg.jpg')" }}
+            />
+            {/* Gradient Overlay for Crisp Text Contrast */}
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent backdrop-blur-[2px]" />
+
+            {/* Hero Content */}
+            <div className="relative z-10 p-8 sm:p-12 lg:p-14 max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-4 backdrop-blur-md">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
+                <span>spray.ai Executive Engine</span>
+              </div>
+
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight drop-shadow-md">
+                Accelerate Your Executive Job Search
+              </h1>
+
+              <p className="text-sm sm:text-base text-slate-300 font-medium mt-3 leading-relaxed max-w-xl">
+                Autonomous multi-source application tracking, real-time recruiter outreach mapping, and AI-tailored resume distribution.
+              </p>
+
+              {/* Metric Pills inside Hero */}
+              <div className="flex flex-wrap items-center gap-4 mt-6">
+                <div className="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/10 border border-white/15 text-white backdrop-blur-md text-xs font-bold shadow-lg">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span>57 Active Applications</span>
+                </div>
+
+                <div className="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/10 border border-white/15 text-white backdrop-blur-md text-xs font-bold shadow-lg">
+                  <span className="w-2.5 h-2.5 rounded-full bg-indigo-400" />
+                  <span>$175k+ Base Floor</span>
+                </div>
+              </div>
+            </div>
+          </div>
           {/* Top 3 KPI Cards (Resume Variants Card Removed) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5">
             <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
