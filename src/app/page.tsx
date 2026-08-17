@@ -1033,12 +1033,17 @@ export default function HeadhunterDashboard() {
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Highest Degree</label>
-                    <input 
-                      type="text" 
+                    <select 
                       value={settings.highestDegree}
                       onChange={(e) => setSettings(prev => ({ ...prev, highestDegree: e.target.value }))}
-                      className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-medium min-h-[40px]"
-                    />
+                      className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400/20 min-h-[40px]"
+                    >
+                      <option value="High School Diploma / GED">High School Diploma / GED</option>
+                      <option value="Associate's Degree (A.A. / A.S.)">Associate's Degree (A.A. / A.S.)</option>
+                      <option value="Bachelor's Degree (B.S. / B.A.)">Bachelor's Degree (B.S. / B.A.)</option>
+                      <option value="Master's degree (M.S. FIU)">Master's Degree (M.S. / M.A. / M.B.A.)</option>
+                      <option value="Doctorate / Ph.D.">Doctorate / Ph.D.</option>
+                    </select>
                   </div>
                 </div>
               </div>
