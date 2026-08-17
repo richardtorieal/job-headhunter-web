@@ -298,100 +298,98 @@ export default function HeadhunterDashboard() {
 
       {/* Left Collapsible Sidebar */}
       <aside className={`
-        fixed md:sticky top-0 z-50 h-screen bg-slate-900 text-slate-300 border-r border-slate-800 transition-all duration-300 flex flex-col justify-between
+        fixed md:sticky top-0 z-50 h-screen bg-slate-900 text-slate-300 border-r border-slate-800 transition-all duration-300 flex flex-col
         ${mobileMenuOpen ? 'translate-x-0 w-64' : '-translate-x-full md:translate-x-0'}
         ${sidebarCollapsed ? 'md:w-20' : 'md:w-64'}
       `}>
-        <div>
-          {/* Sidebar Header */}
-          <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800">
-            <div className="flex items-center gap-3 overflow-hidden">
-              <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shrink-0 font-black text-xs tracking-tighter">
-                sp.ai
-              </div>
-              {!sidebarCollapsed && (
-                <div className="truncate">
-                  <h1 className="text-base font-black text-white leading-tight tracking-tight">spray.ai</h1>
-                  <p className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider truncate">Executive Pipeline</p>
-                </div>
-              )}
+        {/* Sidebar Header (Pinned Top) */}
+        <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800 shrink-0">
+          <div className="flex items-center gap-3 overflow-hidden">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shrink-0 font-black text-xs tracking-tighter">
+              sp.ai
             </div>
-
-            {/* Mobile Close Button */}
-            <button 
-              onClick={() => setMobileMenuOpen(false)}
-              className="md:hidden p-1.5 text-slate-400 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            {!sidebarCollapsed && (
+              <div className="truncate">
+                <h1 className="text-base font-black text-white leading-tight tracking-tight">spray.ai</h1>
+                <p className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider truncate">Executive Pipeline</p>
+              </div>
+            )}
           </div>
 
-          {/* Navigation Links */}
-          <nav className="p-3 space-y-1.5">
-            <button 
-              onClick={() => { setActiveTab('tracker'); setMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
-                activeTab === 'tracker' 
-                  ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Briefcase className="w-4 h-4 shrink-0" />
-              {!sidebarCollapsed && <span>Applications Tracker ({jobs.length})</span>}
-            </button>
-
-            <button 
-              onClick={() => { setActiveTab('outreach'); setMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
-                activeTab === 'outreach' 
-                  ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Inbox className="w-4 h-4 shrink-0 text-emerald-400" />
-              {!sidebarCollapsed && <span>Email Outreach ({emails.length})</span>}
-            </button>
-
-            <button 
-              onClick={() => { setActiveTab('feed'); setMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
-                activeTab === 'feed' 
-                  ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Search className="w-4 h-4 shrink-0 text-indigo-400" />
-              {!sidebarCollapsed && <span>Market Opportunities</span>}
-            </button>
-
-            <button 
-              onClick={() => { setActiveTab('resumes'); setMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
-                activeTab === 'resumes' 
-                  ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <FileText className="w-4 h-4 shrink-0 text-purple-400" />
-              {!sidebarCollapsed && <span>Resume Engine</span>}
-            </button>
-
-            <button 
-              onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
-                activeTab === 'settings' 
-                  ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <Settings className="w-4 h-4 shrink-0" />
-              {!sidebarCollapsed && <span>Settings & Profile</span>}
-            </button>
-          </nav>
+          {/* Mobile Close Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(false)}
+            className="md:hidden p-1.5 text-slate-400 hover:text-white"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        {/* Sidebar Footer User Info & Bottom Collapse Toggle */}
-        <div className="p-3 border-t border-slate-800 space-y-2">
+        {/* Navigation Links (Scrollable Middle Section) */}
+        <nav className="p-3 space-y-1.5 flex-1 overflow-y-auto min-h-0">
+          <button 
+            onClick={() => { setActiveTab('tracker'); setMobileMenuOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+              activeTab === 'tracker' 
+                ? 'bg-indigo-600 text-white shadow-xs' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+            }`}
+          >
+            <Briefcase className="w-4 h-4 shrink-0" />
+            {!sidebarCollapsed && <span>Applications Tracker ({jobs.length})</span>}
+          </button>
+
+          <button 
+            onClick={() => { setActiveTab('outreach'); setMobileMenuOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+              activeTab === 'outreach' 
+                ? 'bg-indigo-600 text-white shadow-xs' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+            }`}
+          >
+            <Inbox className="w-4 h-4 shrink-0 text-emerald-400" />
+            {!sidebarCollapsed && <span>Email Outreach ({emails.length})</span>}
+          </button>
+
+          <button 
+            onClick={() => { setActiveTab('feed'); setMobileMenuOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+              activeTab === 'feed' 
+                ? 'bg-indigo-600 text-white shadow-xs' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+            }`}
+          >
+            <Search className="w-4 h-4 shrink-0 text-indigo-400" />
+            {!sidebarCollapsed && <span>Market Opportunities</span>}
+          </button>
+
+          <button 
+            onClick={() => { setActiveTab('resumes'); setMobileMenuOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+              activeTab === 'resumes' 
+                ? 'bg-indigo-600 text-white shadow-xs' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+            }`}
+          >
+            <FileText className="w-4 h-4 shrink-0 text-purple-400" />
+            {!sidebarCollapsed && <span>Resume Engine</span>}
+          </button>
+
+          <button 
+            onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+              activeTab === 'settings' 
+                ? 'bg-indigo-600 text-white shadow-xs' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+            }`}
+          >
+            <Settings className="w-4 h-4 shrink-0" />
+            {!sidebarCollapsed && <span>Settings & Profile</span>}
+          </button>
+        </nav>
+
+        {/* Sidebar Footer User Info & Bottom Collapse Toggle (Pinned Bottom) */}
+        <div className="p-3 border-t border-slate-800 space-y-2 shrink-0 bg-slate-900 z-10">
           {!sidebarCollapsed && (
             <div className="px-2 py-1 text-xs">
               <div className="flex items-center gap-2 text-slate-300 font-semibold truncate">
