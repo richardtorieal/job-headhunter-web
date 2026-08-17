@@ -402,19 +402,16 @@ export default function HeadhunterDashboard() {
             </div>
           )}
 
-          {/* Desktop Collapse Toggle Button at Bottom */}
+          {/* Desktop Collapse Toggle Button at Bottom (Icon Only) */}
           <button 
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="hidden md:flex items-center justify-center gap-2.5 w-full p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition text-xs font-semibold min-h-[40px]"
+            className="hidden md:flex items-center justify-center w-full p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition text-xs font-semibold min-h-[40px]"
             title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           >
             {sidebarCollapsed ? (
               <PanelLeftOpen className="w-5 h-5" />
             ) : (
-              <>
-                <PanelLeftClose className="w-5 h-5" />
-                <span>Collapse Sidebar</span>
-              </>
+              <PanelLeftClose className="w-5 h-5" />
             )}
           </button>
         </div>
