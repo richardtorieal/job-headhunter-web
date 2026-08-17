@@ -361,22 +361,22 @@ export default function HeadhunterDashboard() {
         />
       )}
 
-      {/* Left Collapsible Sidebar (Light Neutral / Earth Tone) */}
+      {/* Left Collapsible Sidebar (Modern Light Theme) */}
       <aside className={`
-        fixed top-0 left-0 bottom-0 z-50 h-full bg-stone-50 text-stone-700 border-r border-stone-200/80 transition-all duration-300 flex flex-col justify-between
+        fixed top-0 left-0 bottom-0 z-50 h-full bg-slate-50 text-slate-700 border-r border-slate-200/80 transition-all duration-300 flex flex-col justify-between
         ${mobileMenuOpen ? 'translate-x-0 w-64' : '-translate-x-full md:translate-x-0'}
         ${sidebarCollapsed ? 'md:w-20' : 'md:w-64'}
       `}>
         {/* Sidebar Header (Pinned Top) */}
-        <div className={`h-16 px-4 flex items-center border-b border-stone-200/80 shrink-0 ${sidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
+        <div className={`h-16 px-4 flex items-center border-b border-slate-200/80 shrink-0 ${sidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-9 h-9 rounded-xl bg-[#8C6D53] text-amber-50 flex items-center justify-center shrink-0 font-black text-xs tracking-tighter shadow-xs">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 font-black text-xs tracking-tighter shadow-xs">
               sp.ai
             </div>
             {!sidebarCollapsed && (
               <div className="truncate">
-                <h1 className="text-base font-black text-stone-900 leading-tight tracking-tight">spray.ai</h1>
-                <p className="text-[10px] text-[#8C6D53] font-bold uppercase tracking-wider truncate">Executive Pipeline</p>
+                <h1 className="text-base font-black text-slate-900 leading-tight tracking-tight">spray.ai</h1>
+                <p className="text-[10px] text-indigo-600 font-bold uppercase tracking-wider truncate">Executive Pipeline</p>
               </div>
             )}
           </div>
@@ -384,7 +384,7 @@ export default function HeadhunterDashboard() {
           {/* Mobile Close Button */}
           <button 
             onClick={() => setMobileMenuOpen(false)}
-            className="md:hidden p-1.5 text-stone-500 hover:text-stone-900"
+            className="md:hidden p-1.5 text-slate-500 hover:text-slate-900"
           >
             <X className="w-5 h-5" />
           </button>
@@ -399,8 +399,8 @@ export default function HeadhunterDashboard() {
               sidebarCollapsed ? 'justify-center' : 'justify-start'
             } ${
               activeTab === 'tracker' 
-                ? 'bg-[#8C6D53] text-amber-50 shadow-xs font-bold' 
-                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/60'
+                ? 'bg-indigo-600 text-white shadow-xs font-bold' 
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
             title={sidebarCollapsed ? `Applications Tracker (${jobs.length})` : undefined}
           >
@@ -415,12 +415,12 @@ export default function HeadhunterDashboard() {
               sidebarCollapsed ? 'justify-center' : 'justify-start'
             } ${
               activeTab === 'outreach' 
-                ? 'bg-[#8C6D53] text-amber-50 shadow-xs font-bold' 
-                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/60'
+                ? 'bg-indigo-600 text-white shadow-xs font-bold' 
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
             title={sidebarCollapsed ? `Email Outreach (${emails.length})` : undefined}
           >
-            <Inbox className={`w-4 h-4 shrink-0 transition-transform duration-200 ${activeTab === 'outreach' ? 'text-amber-100' : 'text-emerald-700'}`} />
+            <Inbox className={`w-4 h-4 shrink-0 transition-transform duration-200 ${activeTab === 'outreach' ? 'text-white' : 'text-emerald-600'}`} />
             {!sidebarCollapsed && <span>Email Outreach ({emails.length})</span>}
           </button>
 
@@ -431,12 +431,12 @@ export default function HeadhunterDashboard() {
               sidebarCollapsed ? 'justify-center' : 'justify-start'
             } ${
               activeTab === 'feed' 
-                ? 'bg-[#8C6D53] text-amber-50 shadow-xs font-bold' 
-                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/60'
+                ? 'bg-indigo-600 text-white shadow-xs font-bold' 
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
             title={sidebarCollapsed ? "Market Opportunities" : undefined}
           >
-            <Search className={`w-4 h-4 shrink-0 transition-transform duration-200 ${activeTab === 'feed' ? 'text-amber-100' : 'text-amber-700'}`} />
+            <Search className={`w-4 h-4 shrink-0 transition-transform duration-200 ${activeTab === 'feed' ? 'text-white' : 'text-indigo-600'}`} />
             {!sidebarCollapsed && <span>Market Opportunities</span>}
           </button>
 
@@ -447,12 +447,12 @@ export default function HeadhunterDashboard() {
               sidebarCollapsed ? 'justify-center' : 'justify-start'
             } ${
               activeTab === 'resumes' 
-                ? 'bg-[#8C6D53] text-amber-50 shadow-xs font-bold' 
-                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/60'
+                ? 'bg-indigo-600 text-white shadow-xs font-bold' 
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
             title={sidebarCollapsed ? "Resume Engine" : undefined}
           >
-            <FileText className={`w-4 h-4 shrink-0 transition-transform duration-200 ${activeTab === 'resumes' ? 'text-amber-100' : 'text-purple-700'}`} />
+            <FileText className={`w-4 h-4 shrink-0 transition-transform duration-200 ${activeTab === 'resumes' ? 'text-white' : 'text-purple-600'}`} />
             {!sidebarCollapsed && <span>Resume Engine</span>}
           </button>
 
@@ -463,8 +463,8 @@ export default function HeadhunterDashboard() {
               sidebarCollapsed ? 'justify-center' : 'justify-start'
             } ${
               activeTab === 'settings' 
-                ? 'bg-[#8C6D53] text-amber-50 shadow-xs font-bold' 
-                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/60'
+                ? 'bg-indigo-600 text-white shadow-xs font-bold' 
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
             title={sidebarCollapsed ? "Settings & Profile" : undefined}
           >
@@ -474,11 +474,11 @@ export default function HeadhunterDashboard() {
         </nav>
 
         {/* Sidebar Footer (Collapse Toggle FIRST, Username BELOW) */}
-        <div className="p-3 border-t border-stone-200/80 shrink-0 bg-stone-50 space-y-2">
+        <div className="p-3 border-t border-slate-200/80 shrink-0 bg-slate-50 space-y-2">
           {/* Desktop Collapse Toggle Button (Top of Footer - Centered when collapsed, Left-justified when expanded) */}
           <button 
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className={`hidden md:flex items-center w-full p-2.5 rounded-xl text-stone-600 hover:text-stone-900 hover:bg-stone-200/60 transition text-xs font-semibold min-h-[40px] ${
+            className={`hidden md:flex items-center w-full p-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 transition text-xs font-semibold min-h-[40px] ${
               sidebarCollapsed ? 'justify-center' : 'justify-start px-3 gap-3'
             }`}
             title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
@@ -495,12 +495,12 @@ export default function HeadhunterDashboard() {
 
           {/* User Info (BELOW Collapse Toggle Button) */}
           {!sidebarCollapsed && (
-            <div className="px-3 py-1.5 text-xs border-t border-stone-200/80 pt-2">
-              <div className="flex items-center gap-2 text-stone-800 font-semibold truncate">
-                <UserCheck className="w-4 h-4 text-[#8C6D53] shrink-0" />
+            <div className="px-3 py-1.5 text-xs border-t border-slate-200/80 pt-2">
+              <div className="flex items-center gap-2 text-slate-800 font-semibold truncate">
+                <UserCheck className="w-4 h-4 text-indigo-600 shrink-0" />
                 <span className="truncate">{settings.fullName}</span>
               </div>
-              <p className="text-[10px] text-stone-500 truncate mt-0.5">{settings.email}</p>
+              <p className="text-[10px] text-slate-500 truncate mt-0.5">{settings.email}</p>
             </div>
           )}
         </div>
@@ -509,17 +509,17 @@ export default function HeadhunterDashboard() {
       {/* Right Main Content Area with Dynamic Padding Offset */}
       <div className={`flex-1 min-w-0 flex flex-col transition-all duration-300 ${sidebarCollapsed ? 'md:pl-20' : 'md:pl-64'}`}>
         {/* Header Bar */}
-        <header className="sticky top-0 z-30 bg-white border-b border-stone-200 shadow-xs h-16 px-4 md:px-8 flex items-center justify-between">
+        <header className="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-xs h-16 px-4 md:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {/* Mobile Hamburger Menu Toggle */}
             <button 
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-xl text-stone-600 hover:bg-stone-100 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
               <Menu className="w-5 h-5" />
             </button>
 
-            <h2 className="text-base font-bold text-stone-900 truncate">
+            <h2 className="text-base font-bold text-slate-900 truncate">
               {activeTab === 'tracker' && 'Applications Tracker'}
               {activeTab === 'outreach' && 'Recruiter Email Outreach'}
               {activeTab === 'feed' && 'Target Market Opportunities'}
@@ -529,21 +529,21 @@ export default function HeadhunterDashboard() {
           </div>
         </header>
 
-        {/* Full-Width Light Earth-Toned Hero Section (Only visible on Applications Tracker home page) */}
+        {/* Full-Width Modern Light Hero Section (Only visible on Applications Tracker home page) */}
         {activeTab === 'tracker' && (
-          <div className="relative w-full bg-stone-100 border-b border-stone-200/80 overflow-hidden shadow-xs">
+          <div className="relative w-full bg-slate-100/70 border-b border-slate-200/80 overflow-hidden shadow-xs">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-90 transition-transform duration-700 hover:scale-105"
+              className="absolute inset-0 bg-cover bg-center opacity-95 transition-transform duration-700 hover:scale-105"
               style={{ backgroundImage: "url('/hero-bg.jpg')" }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-stone-50/95 via-stone-50/80 to-transparent backdrop-blur-[1px]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-50/90 via-slate-50/75 to-transparent backdrop-blur-[1px]" />
 
             <div className="relative z-10 p-8 sm:p-12 lg:p-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-stone-900 leading-tight tracking-tight drop-shadow-xs">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight tracking-tight drop-shadow-xs">
                 Accelerate your search... not your headaches
               </h1>
 
-              <p className="text-sm sm:text-base text-stone-700 font-semibold mt-3 leading-relaxed max-w-xl">
+              <p className="text-sm sm:text-base text-slate-700 font-semibold mt-3 leading-relaxed max-w-xl">
                 Autonomous multi-source application tracking, real-time recruiter outreach mapping, and AI-tailored resume distribution.
               </p>
             </div>
@@ -626,7 +626,7 @@ export default function HeadhunterDashboard() {
 
                   <button 
                     onClick={() => setShowAddJobModal(true)}
-                    className="flex items-center gap-1.5 px-4 py-2.5 bg-[#8C6D53] hover:bg-[#785c45] text-white text-xs font-bold rounded-xl transition shadow-xs min-h-[40px]"
+                    className="flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs min-h-[40px]"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Add Job</span>
@@ -854,7 +854,7 @@ export default function HeadhunterDashboard() {
                   <button 
                     onClick={handleScanEmails}
                     disabled={scanning}
-                    className="px-4 py-2 bg-[#8C6D53] hover:bg-[#785c45] text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 min-h-[40px] shadow-xs disabled:opacity-50"
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 min-h-[40px] shadow-xs disabled:opacity-50"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${scanning ? 'animate-spin' : ''}`} />
                     <span>{scanning ? 'Scanning...' : 'Refresh Inbox'}</span>
