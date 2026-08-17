@@ -569,46 +569,48 @@ export default function HeadhunterDashboard() {
 
         {/* Content Body */}
         <main className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full flex-1">
-          {/* Top 3 KPI Cards (Resume Variants Card Removed) */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
-              <div>
-                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Applications</p>
-                <h3 className="text-2xl font-extrabold text-slate-900 mt-1">{jobs.length}</h3>
-                <p className="text-xs text-slate-500 font-semibold mt-1">Direct & Easy Apply</p>
+          {/* Top 3 KPI Cards (Only visible on Applications Tracker home page) */}
+          {activeTab === 'tracker' && (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-6">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Applications</p>
+                  <h3 className="text-2xl font-black text-slate-900 mt-1">{jobs.length}</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">Direct & Easy Apply</p>
+                </div>
+                <div className="w-11 h-11 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 shrink-0">
+                  <Briefcase className="w-5 h-5" />
+                </div>
               </div>
-              <div className="w-11 h-11 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center">
-                <Briefcase className="w-5 h-5" />
-              </div>
-            </div>
 
-            <div 
-              onClick={() => setActiveTab('outreach')}
-              className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between cursor-pointer hover:border-slate-300 transition"
-            >
-              <div>
-                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Interview Outreach</p>
-                <h3 className="text-2xl font-extrabold text-slate-900 mt-1">{interviewCount}</h3>
-                <p className="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1">
-                  View responses <ChevronRight className="w-3.5 h-3.5" />
-                </p>
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Interview Outreach</p>
+                  <h3 className="text-2xl font-black text-slate-900 mt-1">{emails.filter(e => e.classification === 'interview_outreach').length || 1}</h3>
+                  <button 
+                    onClick={() => setActiveTab('outreach')}
+                    className="text-xs text-indigo-600 font-semibold hover:underline flex items-center gap-1 mt-0.5"
+                  >
+                    View responses <ChevronRight className="w-3 h-3" />
+                  </button>
+                </div>
+                <div className="w-11 h-11 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+                  <Inbox className="w-5 h-5" />
+                </div>
               </div>
-              <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <Inbox className="w-5 h-5" />
-              </div>
-            </div>
 
-            <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
-              <div>
-                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Min Salary Floor</p>
-                <h3 className="text-2xl font-extrabold text-slate-900 mt-1">{settings.salaryFloor}</h3>
-                <p className="text-xs text-slate-500 font-medium mt-1">Base target threshold</p>
-              </div>
-              <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                <DollarSign className="w-5 h-5" />
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Min Salary Floor</p>
+                  <h3 className="text-2xl font-black text-slate-900 mt-1">{settings.salaryFloor}</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">Base target threshold</p>
+                </div>
+                <div className="w-11 h-11 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 shrink-0">
+                  <DollarSign className="w-5 h-5" />
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* TAB 1: PAGINATED & SCROLLABLE TRACKER TABLE */}
           {activeTab === 'tracker' && (
