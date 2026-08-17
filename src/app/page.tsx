@@ -98,8 +98,23 @@ export default function HeadhunterDashboard() {
   const [selectedEmail, setSelectedEmail] = useState<EmailItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [scanning, setScanning] = useState(false);
+  const [lastScanTime, setLastScanTime] = useState<string>('2026-08-17T02:42:05Z');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+
+  const getRelativeTimeString = (dateStr?: string) => {
+    if (!dateStr) return 'Refreshed 2 hours ago';
+    const now = new Date().getTime();
+    const past = new Date(dateStr).getTime();
+    const diffMs = now - past;
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMins / 60);
+
+    if (diffMins < 1) return 'Refreshed just now';
+    if (diffMins < 60) return `Refreshed ${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `Refreshed ${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    return `Refreshed ${Math.floor(diffHours / 24)} days ago`;
+  };
 
   // Table Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -150,6 +165,7 @@ export default function HeadhunterDashboard() {
       const res = await fetch('/api/emails');
       const data = await res.json();
       setEmails(data.emails || []);
+      if (data.lastRunAt) setLastScanTime(data.lastRunAt);
     } catch (e) {
       console.error(e);
     }
@@ -202,6 +218,7 @@ export default function HeadhunterDashboard() {
     setScanning(true);
     try {
       await fetch('/api/scan', { method: 'POST' });
+      setLastScanTime(new Date().toISOString());
       await fetchJobs();
       await fetchEmails();
     } catch (e) {
@@ -358,74 +375,94 @@ export default function HeadhunterDashboard() {
 
         {/* Navigation Links (Scrollable Middle Section - Centered when collapsed, Left-justified when expanded) */}
         <nav className="p-3 space-y-1.5 flex-1 overflow-y-auto min-h-0">
+          {/* Applications Tracker */}
           <button 
             onClick={() => { setActiveTab('tracker'); setMobileMenuOpen(false); }}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+            className={`group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
               sidebarCollapsed ? 'justify-center' : 'justify-start'
             } ${
               activeTab === 'tracker' 
                 ? 'bg-indigo-600 text-white shadow-xs' 
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
             }`}
           >
-            <Briefcase className="w-4 h-4 shrink-0" />
+            <Briefcase className="w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110" />
             {!sidebarCollapsed && <span>Applications Tracker ({jobs.length})</span>}
+            <div className="absolute left-full ml-3 px-3 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-lg shadow-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-1000 whitespace-nowrap z-50 border border-slate-700">
+              Applications Tracker ({jobs.length})
+            </div>
           </button>
 
+          {/* Email Outreach */}
           <button 
             onClick={() => { setActiveTab('outreach'); setMobileMenuOpen(false); }}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+            className={`group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
               sidebarCollapsed ? 'justify-center' : 'justify-start'
             } ${
               activeTab === 'outreach' 
                 ? 'bg-indigo-600 text-white shadow-xs' 
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
             }`}
           >
-            <Inbox className="w-4 h-4 shrink-0 text-emerald-400" />
+            <Inbox className="w-4 h-4 shrink-0 text-emerald-400 transition-transform duration-200 group-hover:scale-110" />
             {!sidebarCollapsed && <span>Email Outreach ({emails.length})</span>}
+            <div className="absolute left-full ml-3 px-3 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-lg shadow-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-1000 whitespace-nowrap z-50 border border-slate-700">
+              Email Outreach ({emails.length})
+            </div>
           </button>
 
+          {/* Market Opportunities */}
           <button 
             onClick={() => { setActiveTab('feed'); setMobileMenuOpen(false); }}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+            className={`group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
               sidebarCollapsed ? 'justify-center' : 'justify-start'
             } ${
               activeTab === 'feed' 
                 ? 'bg-indigo-600 text-white shadow-xs' 
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
             }`}
           >
-            <Search className="w-4 h-4 shrink-0 text-indigo-400" />
+            <Search className="w-4 h-4 shrink-0 text-indigo-400 transition-transform duration-200 group-hover:scale-110" />
             {!sidebarCollapsed && <span>Market Opportunities</span>}
+            <div className="absolute left-full ml-3 px-3 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-lg shadow-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-1000 whitespace-nowrap z-50 border border-slate-700">
+              Market Opportunities
+            </div>
           </button>
 
+          {/* Resume Engine */}
           <button 
             onClick={() => { setActiveTab('resumes'); setMobileMenuOpen(false); }}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+            className={`group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
               sidebarCollapsed ? 'justify-center' : 'justify-start'
             } ${
               activeTab === 'resumes' 
                 ? 'bg-indigo-600 text-white shadow-xs' 
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
             }`}
           >
-            <FileText className="w-4 h-4 shrink-0 text-purple-400" />
+            <FileText className="w-4 h-4 shrink-0 text-purple-400 transition-transform duration-200 group-hover:scale-110" />
             {!sidebarCollapsed && <span>Resume Engine</span>}
+            <div className="absolute left-full ml-3 px-3 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-lg shadow-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-1000 whitespace-nowrap z-50 border border-slate-700">
+              Resume Engine
+            </div>
           </button>
 
+          {/* Settings & Profile */}
           <button 
             onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+            className={`group relative w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
               sidebarCollapsed ? 'justify-center' : 'justify-start'
             } ${
               activeTab === 'settings' 
                 ? 'bg-indigo-600 text-white shadow-xs' 
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
             }`}
           >
-            <Settings className="w-4 h-4 shrink-0" />
+            <Settings className="w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110" />
             {!sidebarCollapsed && <span>Settings & Profile</span>}
+            <div className="absolute left-full ml-3 px-3 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-lg shadow-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-1000 whitespace-nowrap z-50 border border-slate-700">
+              Settings & Profile
+            </div>
           </button>
         </nav>
 
@@ -482,17 +519,6 @@ export default function HeadhunterDashboard() {
               {activeTab === 'resumes' && 'Resume Category Engine'}
               {activeTab === 'settings' && 'Job Preferences & Profile'}
             </h2>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={handleScanEmails}
-              disabled={scanning}
-              className="flex items-center gap-2 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition shadow-xs disabled:opacity-50 min-h-[40px]"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${scanning ? 'animate-spin' : ''}`} />
-              <span className="hidden sm:inline">{scanning ? 'Syncing...' : 'Refresh Inbox'}</span>
-            </button>
           </div>
         </header>
 
@@ -781,7 +807,7 @@ export default function HeadhunterDashboard() {
           {/* TAB 2: RECRUITER EMAIL OUTREACH */}
           {activeTab === 'outreach' && (
             <div className="space-y-6">
-              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+              <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                   <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                     <Inbox className="w-5 h-5 text-slate-700" /> Recruiter Email Communications
@@ -791,13 +817,19 @@ export default function HeadhunterDashboard() {
                   </p>
                 </div>
 
-                <button 
-                  onClick={handleScanEmails}
-                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 ${scanning ? 'animate-spin' : ''}`} />
-                  {scanning ? 'Scanning...' : 'Refresh Inbox'}
-                </button>
+                <div className="flex items-center gap-3 self-end sm:self-auto">
+                  <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-2 rounded-xl border border-slate-200 whitespace-nowrap">
+                    {getRelativeTimeString(lastScanTime)}
+                  </span>
+                  <button 
+                    onClick={handleScanEmails}
+                    disabled={scanning}
+                    className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition flex items-center gap-2 min-h-[40px] shadow-xs disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${scanning ? 'animate-spin' : ''}`} />
+                    <span>{scanning ? 'Scanning...' : 'Refresh Inbox'}</span>
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
