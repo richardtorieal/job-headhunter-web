@@ -776,7 +776,7 @@ export default function HeadhunterDashboard() {
                         <h5 className="text-xs font-bold text-slate-900 truncate">{emailItem.subject}</h5>
                         <p className="text-[11px] text-slate-600 font-medium mt-0.5">{emailItem.company || emailItem.from}</p>
                         <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 font-sans">
-                          {emailItem.fullBody.replace(/<[^>]*>?/gm, '')}
+                          {emailItem.fullBody.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '').replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '').replace(/<[^>]*>?/gm, '').trim()}
                         </p>
                       </div>
                     ))
@@ -811,9 +811,21 @@ export default function HeadhunterDashboard() {
                         )}
                       </div>
 
-                      <div className="prose prose-slate max-w-none text-xs text-slate-700 leading-relaxed font-sans bg-slate-50 p-4 rounded-xl border border-slate-200/60 whitespace-pre-wrap">
-                        {selectedEmail.fullBody.replace(/<[^>]*>?/gm, '')}
+                      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
+                      <div className="bg-slate-100 px-4 py-2 text-[11px] font-bold text-slate-500 border-b border-slate-200 flex items-center justify-between">
+                        <span>Original HTML Email Message</span>
+                        <span className="text-slate-400 font-mono">Rendered View</span>
                       </div>
+                      <iframe 
+                        title="Full Email Message Content"
+                        srcDoc={
+                          selectedEmail.fullBody.includes('<html') || selectedEmail.fullBody.includes('<div') || selectedEmail.fullBody.includes('<p') 
+                            ? selectedEmail.fullBody 
+                            : `<!DOCTYPE html><html><head><style>body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; color: #334155; line-height: 1.6; padding: 20px; white-space: pre-wrap; }</style></head><body>${selectedEmail.fullBody}</body></html>`
+                        }
+                        className="w-full h-[550px] border-0 bg-white"
+                      />
+                    </div>
                     </div>
                   ) : (
                     <div className="bg-white p-12 rounded-2xl border border-slate-200/80 shadow-xs text-center text-xs text-slate-400 font-medium">
