@@ -303,7 +303,7 @@ export default function HeadhunterDashboard() {
         ${sidebarCollapsed ? 'md:w-20' : 'md:w-64'}
       `}>
         {/* Sidebar Header (Pinned Top) */}
-        <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800 shrink-0">
+        <div className={`h-16 px-4 flex items-center border-b border-slate-800 shrink-0 ${sidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shrink-0 font-black text-xs tracking-tighter">
               sp.ai
@@ -325,11 +325,13 @@ export default function HeadhunterDashboard() {
           </button>
         </div>
 
-        {/* Navigation Links (Scrollable Middle Section) */}
+        {/* Navigation Links (Scrollable Middle Section - Centered when collapsed, Left-justified when expanded) */}
         <nav className="p-3 space-y-1.5 flex-1 overflow-y-auto min-h-0">
           <button 
             onClick={() => { setActiveTab('tracker'); setMobileMenuOpen(false); }}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start'
+            } ${
               activeTab === 'tracker' 
                 ? 'bg-indigo-600 text-white shadow-xs' 
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
@@ -342,6 +344,8 @@ export default function HeadhunterDashboard() {
           <button 
             onClick={() => { setActiveTab('outreach'); setMobileMenuOpen(false); }}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start'
+            } ${
               activeTab === 'outreach' 
                 ? 'bg-indigo-600 text-white shadow-xs' 
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
@@ -354,6 +358,8 @@ export default function HeadhunterDashboard() {
           <button 
             onClick={() => { setActiveTab('feed'); setMobileMenuOpen(false); }}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start'
+            } ${
               activeTab === 'feed' 
                 ? 'bg-indigo-600 text-white shadow-xs' 
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
@@ -366,6 +372,8 @@ export default function HeadhunterDashboard() {
           <button 
             onClick={() => { setActiveTab('resumes'); setMobileMenuOpen(false); }}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start'
+            } ${
               activeTab === 'resumes' 
                 ? 'bg-indigo-600 text-white shadow-xs' 
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
@@ -378,6 +386,8 @@ export default function HeadhunterDashboard() {
           <button 
             onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition min-h-[44px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start'
+            } ${
               activeTab === 'settings' 
                 ? 'bg-indigo-600 text-white shadow-xs' 
                 : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
@@ -388,10 +398,29 @@ export default function HeadhunterDashboard() {
           </button>
         </nav>
 
-        {/* Sidebar Footer User Info & Bottom Collapse Toggle (Pinned Bottom) */}
-        <div className="p-3 border-t border-slate-800 shrink-0 bg-slate-900">
+        {/* Sidebar Footer (Collapse Toggle FIRST, Username BELOW) */}
+        <div className="p-3 border-t border-slate-800 shrink-0 bg-slate-900 space-y-2">
+          {/* Desktop Collapse Toggle Button (Top of Footer - Centered when collapsed, Left-justified when expanded) */}
+          <button 
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className={`hidden md:flex items-center w-full p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition text-xs font-semibold min-h-[40px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start px-3 gap-3'
+            }`}
+            title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+          >
+            {sidebarCollapsed ? (
+              <PanelLeftOpen className="w-5 h-5 shrink-0" />
+            ) : (
+              <>
+                <PanelLeftClose className="w-5 h-5 shrink-0" />
+                <span>Collapse Sidebar</span>
+              </>
+            )}
+          </button>
+
+          {/* User Info (BELOW Collapse Toggle Button) */}
           {!sidebarCollapsed && (
-            <div className="px-2 py-1 mb-2 text-xs">
+            <div className="px-3 py-1.5 text-xs border-t border-slate-800/60 pt-2">
               <div className="flex items-center gap-2 text-slate-300 font-semibold truncate">
                 <UserCheck className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span className="truncate">{settings.fullName}</span>
@@ -399,19 +428,6 @@ export default function HeadhunterDashboard() {
               <p className="text-[10px] text-slate-500 truncate mt-0.5">{settings.email}</p>
             </div>
           )}
-
-          {/* Desktop Collapse Toggle Button at Bottom (Icon Only) */}
-          <button 
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="hidden md:flex items-center justify-center w-full p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition text-xs font-semibold min-h-[40px]"
-            title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-          >
-            {sidebarCollapsed ? (
-              <PanelLeftOpen className="w-5 h-5" />
-            ) : (
-              <PanelLeftClose className="w-5 h-5" />
-            )}
-          </button>
         </div>
       </aside>
 
