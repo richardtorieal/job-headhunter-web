@@ -393,129 +393,84 @@ export default function HeadhunterDashboard() {
         {/* Navigation Links (Scrollable Middle Section - Centered when collapsed, Left-justified when expanded) */}
         <nav className="p-3 space-y-1.5 flex-1 overflow-y-auto min-h-0">
           {/* Applications Tracker */}
-          <div className="relative flex items-center">
-            <button 
-              onClick={() => { setActiveTab('tracker'); setMobileMenuOpen(false); }}
-              onMouseEnter={() => handleMouseEnterNav('tracker')}
-              onMouseLeave={handleMouseLeaveNav}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
-                sidebarCollapsed ? 'justify-center' : 'justify-start'
-              } ${
-                activeTab === 'tracker' 
-                  ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title={sidebarCollapsed ? `Applications Tracker (${jobs.length})` : undefined}
-            >
-              <Briefcase className="w-4 h-4 shrink-0 transition-transform duration-200" />
-              {!sidebarCollapsed && <span>Applications Tracker ({jobs.length})</span>}
-            </button>
-            {sidebarCollapsed && showTooltipNav === 'tracker' && (
-              <div className="fixed left-24 z-[100] px-3 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded-xl shadow-2xl border border-slate-700 pointer-events-none whitespace-nowrap">
-                Applications Tracker ({jobs.length})
-              </div>
-            )}
-          </div>
+          <button 
+            onClick={() => { setActiveTab('tracker'); setMobileMenuOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start'
+            } ${
+              activeTab === 'tracker' 
+                ? 'bg-indigo-600 text-white shadow-xs' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
+            }`}
+            title={sidebarCollapsed ? `Applications Tracker (${jobs.length})` : undefined}
+          >
+            <Briefcase className="w-4 h-4 shrink-0 transition-transform duration-200" />
+            {!sidebarCollapsed && <span>Applications Tracker ({jobs.length})</span>}
+          </button>
 
           {/* Email Outreach */}
-          <div className="relative flex items-center">
-            <button 
-              onClick={() => { setActiveTab('outreach'); setMobileMenuOpen(false); }}
-              onMouseEnter={() => handleMouseEnterNav('outreach')}
-              onMouseLeave={handleMouseLeaveNav}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
-                sidebarCollapsed ? 'justify-center' : 'justify-start'
-              } ${
-                activeTab === 'outreach' 
-                  ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title={sidebarCollapsed ? `Email Outreach (${emails.length})` : undefined}
-            >
-              <Inbox className="w-4 h-4 shrink-0 text-emerald-400 transition-transform duration-200" />
-              {!sidebarCollapsed && <span>Email Outreach ({emails.length})</span>}
-            </button>
-            {sidebarCollapsed && showTooltipNav === 'outreach' && (
-              <div className="fixed left-24 z-[100] px-3 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded-xl shadow-2xl border border-slate-700 pointer-events-none whitespace-nowrap">
-                Email Outreach ({emails.length})
-              </div>
-            )}
-          </div>
+          <button 
+            onClick={() => { setActiveTab('outreach'); setMobileMenuOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start'
+            } ${
+              activeTab === 'outreach' 
+                ? 'bg-indigo-600 text-white shadow-xs' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
+            }`}
+            title={sidebarCollapsed ? `Email Outreach (${emails.length})` : undefined}
+          >
+            <Inbox className="w-4 h-4 shrink-0 text-emerald-400 transition-transform duration-200" />
+            {!sidebarCollapsed && <span>Email Outreach ({emails.length})</span>}
+          </button>
 
           {/* Market Opportunities */}
-          <div className="relative flex items-center">
-            <button 
-              onClick={() => { setActiveTab('feed'); setMobileMenuOpen(false); }}
-              onMouseEnter={() => handleMouseEnterNav('feed')}
-              onMouseLeave={handleMouseLeaveNav}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
-                sidebarCollapsed ? 'justify-center' : 'justify-start'
-              } ${
-                activeTab === 'feed' 
-                  ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title={sidebarCollapsed ? "Market Opportunities" : undefined}
-            >
-              <Search className="w-4 h-4 shrink-0 text-indigo-400 transition-transform duration-200" />
-              {!sidebarCollapsed && <span>Market Opportunities</span>}
-            </button>
-            {sidebarCollapsed && showTooltipNav === 'feed' && (
-              <div className="fixed left-24 z-[100] px-3 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded-xl shadow-2xl border border-slate-700 pointer-events-none whitespace-nowrap">
-                Market Opportunities
-              </div>
-            )}
-          </div>
+          <button 
+            onClick={() => { setActiveTab('feed'); setMobileMenuOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start'
+            } ${
+              activeTab === 'feed' 
+                ? 'bg-indigo-600 text-white shadow-xs' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
+            }`}
+            title={sidebarCollapsed ? "Market Opportunities" : undefined}
+          >
+            <Search className="w-4 h-4 shrink-0 text-indigo-400 transition-transform duration-200" />
+            {!sidebarCollapsed && <span>Market Opportunities</span>}
+          </button>
 
           {/* Resume Engine */}
-          <div className="relative flex items-center">
-            <button 
-              onClick={() => { setActiveTab('resumes'); setMobileMenuOpen(false); }}
-              onMouseEnter={() => handleMouseEnterNav('resumes')}
-              onMouseLeave={handleMouseLeaveNav}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
-                sidebarCollapsed ? 'justify-center' : 'justify-start'
-              } ${
-                activeTab === 'resumes' 
-                  ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title={sidebarCollapsed ? "Resume Engine" : undefined}
-            >
-              <FileText className="w-4 h-4 shrink-0 text-purple-400 transition-transform duration-200" />
-              {!sidebarCollapsed && <span>Resume Engine</span>}
-            </button>
-            {sidebarCollapsed && showTooltipNav === 'resumes' && (
-              <div className="fixed left-24 z-[100] px-3 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded-xl shadow-2xl border border-slate-700 pointer-events-none whitespace-nowrap">
-                Resume Engine
-              </div>
-            )}
-          </div>
+          <button 
+            onClick={() => { setActiveTab('resumes'); setMobileMenuOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start'
+            } ${
+              activeTab === 'resumes' 
+                ? 'bg-indigo-600 text-white shadow-xs' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
+            }`}
+            title={sidebarCollapsed ? "Resume Engine" : undefined}
+          >
+            <FileText className="w-4 h-4 shrink-0 text-purple-400 transition-transform duration-200" />
+            {!sidebarCollapsed && <span>Resume Engine</span>}
+          </button>
 
           {/* Settings & Profile */}
-          <div className="relative flex items-center">
-            <button 
-              onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
-              onMouseEnter={() => handleMouseEnterNav('settings')}
-              onMouseLeave={handleMouseLeaveNav}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
-                sidebarCollapsed ? 'justify-center' : 'justify-start'
-              } ${
-                activeTab === 'settings' 
-                  ? 'bg-indigo-600 text-white shadow-xs' 
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title={sidebarCollapsed ? "Settings & Profile" : undefined}
-            >
-              <Settings className="w-4 h-4 shrink-0 transition-transform duration-200" />
-              {!sidebarCollapsed && <span>Settings & Profile</span>}
-            </button>
-            {sidebarCollapsed && showTooltipNav === 'settings' && (
-              <div className="fixed left-24 z-[100] px-3 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded-xl shadow-2xl border border-slate-700 pointer-events-none whitespace-nowrap">
-                Settings & Profile
-              </div>
-            )}
-          </div>
+          <button 
+            onClick={() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 min-h-[44px] ${
+              sidebarCollapsed ? 'justify-center' : 'justify-start'
+            } ${
+              activeTab === 'settings' 
+                ? 'bg-indigo-600 text-white shadow-xs' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
+            }`}
+            title={sidebarCollapsed ? "Settings & Profile" : undefined}
+          >
+            <Settings className="w-4 h-4 shrink-0 transition-transform duration-200" />
+            {!sidebarCollapsed && <span>Settings & Profile</span>}
+          </button>
         </nav>
 
         {/* Sidebar Footer (Collapse Toggle FIRST, Username BELOW) */}
