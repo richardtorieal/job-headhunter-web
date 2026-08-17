@@ -442,9 +442,10 @@ export default function HeadhunterDashboard() {
                   className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none font-semibold text-slate-700"
                 >
                   <option value="all">All Statuses</option>
-                  <option value="interview_scheduled">Interview / Confirmed</option>
-                  <option value="applied">Applied</option>
-                  <option value="rejected">Rejected</option>
+                  <option value="confirmed">Receipt Confirmed (Email)</option>
+                  <option value="applied">Applied (Submitted)</option>
+                  <option value="interview_scheduled">Interview Scheduled</option>
+                  <option value="rejected">Declined</option>
                 </select>
 
                 <button 
@@ -558,8 +559,13 @@ export default function HeadhunterDashboard() {
                           <td className="px-6 py-4">
                             {job.status === 'interview_scheduled' ? (
                               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                 Interview Scheduled
+                              </span>
+                            ) : job.status === 'confirmed' ? (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                <Inbox className="w-3 h-3 text-indigo-600" />
+                                Receipt Confirmed
                               </span>
                             ) : job.status === 'rejected' ? (
                               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
@@ -567,7 +573,8 @@ export default function HeadhunterDashboard() {
                               </span>
                             ) : (
                               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-                                Applied
+                                <CheckCircle2 className="w-3 h-3 text-slate-500" />
+                                Applied (Submitted)
                               </span>
                             )}
                           </td>
