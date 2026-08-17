@@ -500,10 +500,10 @@ export default function HeadhunterDashboard() {
 
                         <th 
                           onClick={() => handleSort('appliedAt')}
-                          className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition bg-indigo-50/40 text-indigo-900"
+                          className="px-6 py-4 cursor-pointer hover:bg-slate-100/80 transition"
                         >
                           <div className="flex items-center gap-1.5">
-                            Applied Date (Default: Descending)
+                            Applied Date
                             {sortField === 'appliedAt' ? (
                               sortDirection === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-indigo-600" /> : <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
                             ) : (
