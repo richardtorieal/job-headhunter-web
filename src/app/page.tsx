@@ -40,7 +40,38 @@ interface Job {
   location?: string;
   notes?: string;
   resumeUsed?: string;
+  companyLogo?: string;
+  companyDomain?: string;
 }
+
+const CompanyLogoBadge = ({ company, logoUrl }: { company: string; logoUrl?: string }) => {
+  const [imgState, setImgState] = useState<'primary' | 'secondary' | 'failed'>('primary');
+  const secondaryUrl = `https://www.google.com/s2/favicons?domain=${company.toLowerCase().replace(/[^a-z0-9]/g, '')}.com&sz=128`;
+
+  if (imgState === 'failed') {
+    return (
+      <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 shrink-0 shadow-2xs">
+        <Building2 className="w-4 h-4 text-slate-400" />
+      </div>
+    );
+  }
+
+  const currentSrc = imgState === 'primary' && logoUrl ? logoUrl : secondaryUrl;
+
+  return (
+    <div className="w-8 h-8 rounded-full bg-slate-50 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0 shadow-2xs p-0.5">
+      <img 
+        src={currentSrc} 
+        alt={company}
+        onError={() => {
+          if (imgState === 'primary') setImgState('secondary');
+          else setImgState('failed');
+        }}
+        className="w-full h-full object-contain rounded-full"
+      />
+    </div>
+  );
+};
 
 interface EmailItem {
   id: string;
@@ -636,12 +667,16 @@ export default function HeadhunterDashboard() {
                           {paginatedJobs.map((job, idx) => (
                             <tr key={idx} className="hover:bg-slate-50/60 transition">
                               <td className="px-6 py-3.5">
-                                <div className="font-bold text-slate-900 text-sm">{job.title}</div>
-                                <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
-                                  <Building2 className="w-3.5 h-3.5 text-slate-400" />
-                                  {job.company}
-                                  <span className="text-slate-300">•</span>
-                                  <span className="text-slate-600 font-semibold">{job.method}</span>
+                                <div className="flex items-center gap-3">
+                                  <CompanyLogoBadge company={job.company} logoUrl={job.companyLogo} />
+                                  <div>
+                                    <div className="font-bold text-slate-900 text-sm">{job.title}</div>
+                                    <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+                                      <span className="font-semibold text-slate-700">{job.company}</span>
+                                      <span className="text-slate-300">•</span>
+                                      <span className="text-slate-500 font-medium">{job.method}</span>
+                                    </div>
+                                  </div>
                                 </div>
                               </td>
                               <td className="px-6 py-3.5">
