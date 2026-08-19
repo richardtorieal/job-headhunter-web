@@ -5,6 +5,17 @@ const fs = require('fs');
 const CONFIG_PATH = '/Users/richardanderson/projects/job-headhunter-web/data/linkedin-apply-config.json';
 const APPLIED_PATH = '/Users/richardanderson/projects/job-headhunter-web/data/linkedin-applied-jobs.json';
 
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://axvysdxijstzpfcvnlbm.supabase.co';
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4dnlzZHhpanN0enBmY3ZubGJtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzA4Nzg2OSwiZXhwIjoyMTAyNjYzODY5fQ.PULw5Dga6irZMmIv0kyIcTFhy7e3T4EXPUZNKYoJwOI';
+
+let supabaseAdmin = null;
+try {
+  const { createClient } = require('@supabase/supabase-js');
+  supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+} catch (e) {
+  console.warn('Supabase client module not available in apply.cjs environment:', e.message);
+}
+
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const randomDelay = async (min = 2000, max = 5000) => {
   const ms = Math.floor(Math.random() * (max - min)) + min;
@@ -664,6 +675,38 @@ async function run() {
     totalApplications: finalTotal,
     schemaVersion: '1.0'
   }, null, 2));
+
+  // Programmatic Supabase Sync
+  if (supabaseAdmin) {
+    console.log('Syncing applied jobs to Supabase...');
+    const dbRows = updatedJobs.map(j => ({
+      job_id: String(j.jobId),
+      title: j.title || 'Unknown Role',
+      company: j.company || 'Unknown Company',
+      url: j.url || `https://www.linkedin.com/jobs/view/${j.jobId}`,
+      applied_at: j.appliedAt || new Date().toISOString(),
+      method: j.method || 'easyApply',
+      status: j.status || 'applied',
+      salary: j.salary || null,
+      min_salary: j.minSalary || null,
+      max_salary: j.maxSalary || null,
+      location: j.location || 'Remote, US',
+      notes: j.notes || null,
+      logo_url: j.companyLogo || j.logoUrl || null,
+      company_domain: j.companyDomain || null
+    }));
+
+    try {
+      // Upsert in batches of 50
+      for (let i = 0; i < dbRows.length; i += 50) {
+        const chunk = dbRows.slice(i, i + 50);
+        await supabaseAdmin.from('jobs').upsert(chunk, { onConflict: 'job_id' });
+      }
+      console.log(`✓ Programmatically synced ${dbRows.length} jobs to Supabase.`);
+    } catch (sbErr) {
+      console.error('⚠️  Failed to sync jobs to Supabase:', sbErr.message);
+    }
+  }
 
   // Print Summary Report
   console.log(`
