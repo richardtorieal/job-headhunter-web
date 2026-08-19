@@ -618,6 +618,8 @@ export default function HeadhunterDashboard() {
                     className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none font-semibold text-slate-700 min-h-[40px]"
                   >
                     <option value="all">All Statuses</option>
+                    <option value="recruiter_contact">Recruiter Outreach / InMail</option>
+                    <option value="under_review">Application Viewed</option>
                     <option value="confirmed">Receipt Confirmed (Email)</option>
                     <option value="applied">Applied (Submitted)</option>
                     <option value="interview_scheduled">Interview Scheduled</option>
@@ -740,6 +742,16 @@ export default function HeadhunterDashboard() {
                                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                     Interview Scheduled
+                                  </span>
+                                ) : job.status === 'recruiter_contact' ? (
+                                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                                    Recruiter Outreach
+                                  </span>
+                                ) : job.status === 'under_review' ? (
+                                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                    Application Viewed
                                   </span>
                                 ) : job.status === 'confirmed' ? (
                                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">

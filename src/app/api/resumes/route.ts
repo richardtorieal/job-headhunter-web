@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-const RESUMES_DIR = '/Users/richardanderson/projects/discord-bridge/resumes';
-const BASE_RESUME = '/Users/richardanderson/projects/discord-bridge/Richard_Anderson_Resume.pdf';
+const RESUMES_DIR = '/Users/richardanderson/projects/job-headhunter-web/resumes';
+const BASE_RESUME = '/Users/richardanderson/projects/job-headhunter-web/resumes/Richard_Anderson_Resume.pdf';
 
 export async function GET() {
   try {

@@ -1,0 +1,121 @@
+{
+  "jobTitles": [
+    "Solutions Architect",
+    "AI Solutions Architect",
+    "Engineering Manager",
+    "Data Engineering Manager",
+    "Forward Deployed AI Engineer",
+    "Solutions Engineer AI",
+    "Technical Product Manager",
+    "Product Manager",
+    "Lead Data Engineer",
+    "Data Architect",
+    "Director of Data Engineering",
+    "Director of Engineering",
+    "Senior Sales Engineer",
+    "Sales Engineer",
+    "Solutions Engineer"
+  ],
+  "searchQueries": [
+    "Solutions Architect",
+    "AI Solutions Architect",
+    "Engineering Manager",
+    "Forward Deployed AI Engineer",
+    "Technical Product Manager",
+    "Lead Data Engineer",
+    "Data Architect",
+    "Senior Sales Engineer",
+    "Sales Engineer",
+    "Solutions Engineer"
+  ],
+  "experienceLevels": [
+    "Senior",
+    "Lead",
+    "Staff",
+    "Principal",
+    "Director"
+  ],
+  "locations": [
+    "Remote",
+    "Dallas-Fort Worth, TX",
+    "Dallas, TX",
+    "Plano, TX",
+    "Irving, TX",
+    "Frisco, TX",
+    "Arlington, TX",
+    "Fort Worth, TX"
+  ],
+  "workplaceTypes": [
+    "Remote",
+    "Hybrid"
+  ],
+  "minSalary": 175000,
+  "applicationMethods": [
+    "easyApply",
+    "directApplication"
+  ],
+  "resumePath": "/Users/richardanderson/projects/discord-bridge/Richard_Anderson_Resume.pdf",
+  "linkedinAuth": {
+    "method": "chrome_session",
+    "note": "The agent connects to the user's running Chrome via DevTools MCP on port 9222."
+  },
+  "maxApplicationsPerRun": 25,
+  "maxTimePerApplicationMinutes": 5,
+  "blacklistedCompanies": [],
+  "blacklistedKeywords": [
+    "100% in-office",
+    "full time in office",
+    "5 days in office",
+    "on-site full time",
+    "onsite 5 days",
+    "c++",
+    "cpp",
+    "c#",
+    ".net",
+    "java",
+    "frontend",
+    "backend",
+    "full stack",
+    "fullstack",
+    "embedded",
+    "firmware",
+    "game developer",
+    "web developer",
+    "qa engineer",
+    "test engineer",
+    "intern",
+    "junior",
+    "entry level",
+    "associate",
+    "contract",
+    "part-time"
+  ],
+  "preferredKeywords": [
+    "AI",
+    "machine learning",
+    "solutions architecture",
+    "data architecture",
+    "technical product management",
+    "engineering management",
+    "proof of concept",
+    "strategy"
+  ],
+  "defaultAnswers": {
+    "yearsOfExperience": "10+",
+    "willingToRelocate": "Yes, for the right opportunity",
+    "authorizedToWork": "Yes",
+    "requireSponsorship": "No",
+    "desiredSalary": "175000",
+    "startDate": "2-4 weeks",
+    "educationLevel": "Master's degree",
+    "linkedinProfile": "https://linkedin.com/in/richardanderson",
+    "email": "Richard.torieal@gmail.com",
+    "phone": "(863) 513-5131",
+    "location": "Dallas\u2013Fort Worth, TX",
+    "fullName": "Richard Anderson",
+    "firstName": "Richard",
+    "lastName": "Anderson",
+    "highestDegree": "M.S. Computer Engineering \u2013 Networks & Security, Florida International University (Summa Cum Laude, 2019)",
+    "undergraduateDegree": "B.S. Computer Engineering, Florida State University (2017)"
+  }
+}
